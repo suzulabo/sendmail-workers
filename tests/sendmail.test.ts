@@ -1,6 +1,7 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import type { Env } from '../src/index'
 
-import worker, { type Env } from '../src/index'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import worker from '../src/index'
 
 vi.mock('cloudflare:email', () => {
   class EmailMessage {

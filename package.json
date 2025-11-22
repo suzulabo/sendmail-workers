@@ -11,13 +11,13 @@
     "check": "tsc --noEmit"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^2.7.0",
-    "@cloudflare/workers-types": "^4.20250224.0",
-    "@types/node": "^22.10.2",
-    "eslint": "^9.18.0",
+    "@antfu/eslint-config": "^6.2.0",
+    "@cloudflare/workers-types": "^4.20251121.0",
+    "@types/node": "^24.10.1",
+    "eslint": "^9.39.1",
     "mimetext": "^3.0.27",
-    "typescript": "^5.7.3",
-    "vitest": "^2.1.4",
-    "wrangler": "^3.98.0"
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.13",
+    "wrangler": "^4.50.0"
   }
 }
