@@ -2,8 +2,7 @@
   "compilerOptions": {
     "target": "ESNext",
     "lib": [
-      "ESNext",
-      "DOM"
+      "ESNext"
     ],
     "module": "ESNext",
     "moduleResolution": "Bundler",
@@ -17,7 +16,6 @@
   },
   "include": [
     "src",
-    "tests",
-    "wrangler.jsonc"
+    "tests"
   ]
 }
