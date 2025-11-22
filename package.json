@@ -1,0 +1,22 @@
+{
+  "name": "sendmail-worker",
+  "version": "0.0.0",
+  "description": "Cloudflare Worker API to send mail via Email Routing.",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^2.7.0",
+    "@cloudflare/workers-types": "^4.20250224.0",
+    "@types/node": "^22.10.2",
+    "eslint": "^9.18.0",
+    "typescript": "^5.7.3",
+    "vitest": "^2.1.4",
+    "wrangler": "^3.98.0"
+  }
+}
