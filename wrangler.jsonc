@@ -6,9 +6,5 @@
     {
       "name": "EMAIL"
     }
-  ],
-  "vars": {
-    "FROM_ADDRESS": "no-reply@example.com",
-    "TO_ADDRESS": "recipient@example.com"
-  }
+  ]
 }
