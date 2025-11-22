@@ -68,31 +68,46 @@ const parsePayload = async (request: Request): Promise<SendMailPayload | null> =
   }
 };
 
+const handleSendmail = async (request: Request, env: Env): Promise<Response> => {
+  if (request.method !== 'POST') {
+    return jsonResponse(405, { error: 'Method Not Allowed' });
+  }
+
+  if (!isAuthorized(request, env)) {
+    return jsonResponse(401, { error: 'Unauthorized' });
+  }
+
+  const payload = await parsePayload(request);
+  if (!payload) {
+    return jsonResponse(400, { error: 'Invalid subject or body' });
+  }
+
+  const raw = buildRawEmail(env.FROM_ADDRESS, env.TO_ADDRESS, payload);
+  const message = new EmailMessage(env.FROM_ADDRESS, env.TO_ADDRESS, raw);
+
+  try {
+    await env.EMAIL.send(message);
+    return jsonResponse(200, { ok: true });
+  }
+  catch (error) {
+    console.error('Failed to send email', error);
+    return jsonResponse(502, { error: 'Failed to send email' });
+  }
+};
+
+const routes: Record<string, (request: Request, env: Env) => Promise<Response>> = {
+  '/sendmail': handleSendmail,
+};
+
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
-    if (request.method !== 'POST') {
-      return jsonResponse(405, { error: 'Method Not Allowed' });
+    const { pathname } = new URL(request.url);
+
+    const handler = routes[pathname];
+    if (!handler) {
+      return jsonResponse(404, { error: 'Not Found' });
     }
 
-    if (!isAuthorized(request, env)) {
-      return jsonResponse(401, { error: 'Unauthorized' });
-    }
-
-    const payload = await parsePayload(request);
-    if (!payload) {
-      return jsonResponse(400, { error: 'Invalid subject or body' });
-    }
-
-    const raw = buildRawEmail(env.FROM_ADDRESS, env.TO_ADDRESS, payload);
-    const message = new EmailMessage(env.FROM_ADDRESS, env.TO_ADDRESS, raw);
-
-    try {
-      await env.EMAIL.send(message);
-      return jsonResponse(200, { ok: true });
-    }
-    catch (error) {
-      console.error('Failed to send email', error);
-      return jsonResponse(502, { error: 'Failed to send email' });
-    }
+    return handler(request, env);
   },
 };

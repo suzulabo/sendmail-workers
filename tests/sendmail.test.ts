@@ -41,6 +41,11 @@ describe('/sendmail API', () => {
     sendMock.mockReset();
   });
 
+  it('returns 404 for other paths', async () => {
+    const res = await worker.fetch(new Request('http://localhost/health', { method: 'GET' }), baseEnv);
+    expect(res.status).toBe(404);
+  });
+
   it('rejects non-POST methods', async () => {
     const res = await worker.fetch(new Request('http://localhost/sendmail', { method: 'GET' }), baseEnv);
     expect(res.status).toBe(405);
