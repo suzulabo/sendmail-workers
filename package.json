@@ -1,8 +1,8 @@
 {
   "name": "sendmail-worker",
+  "type": "module",
   "version": "0.0.0",
   "description": "Cloudflare Worker API to send mail via Email Routing.",
-  "type": "module",
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
