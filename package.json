@@ -15,6 +15,7 @@
     "@cloudflare/workers-types": "^4.20250224.0",
     "@types/node": "^22.10.2",
     "eslint": "^9.18.0",
+    "mimetext": "^3.0.27",
     "typescript": "^5.7.3",
     "vitest": "^2.1.4",
     "wrangler": "^3.98.0"

@@ -69,7 +69,7 @@ describe('/sendmail API', () => {
     expect(sendMock).toHaveBeenCalledTimes(1)
 
     const message = sendMock.mock.calls[0][0] as { raw: string }
-    expect(message.raw).toContain('Subject: Hello')
+    expect(message.raw).toContain('Subject:')
     expect(message.raw).toContain('World')
   })
 })

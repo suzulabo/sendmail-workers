@@ -1,7 +1,8 @@
 {
   "name": "sendmail-worker",
   "main": "src/index.ts",
-  "compatibility_date": "2024-05-01",
+  "compatibility_date": "2025-05-05",
+  "compatibility_flags": ["nodejs_compat_v2"],
   "send_email": [
     {
       "name": "EMAIL"

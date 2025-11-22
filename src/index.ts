@@ -1,4 +1,5 @@
 import { EmailMessage } from 'cloudflare:email'
+import { createMimeMessage } from 'mimetext'
 
 interface SendEmailBinding {
   send: (message: EmailMessage) => Promise<void>
@@ -21,27 +22,6 @@ function jsonResponse(status: number, data: Record<string, unknown>): Response {
     status,
     headers: { 'content-type': 'application/json; charset=utf-8' },
   })
-}
-
-function sanitizeHeader(value: string): string {
-  return value.replace(/[\r\n]+/g, ' ').trim()
-}
-
-function buildRawEmail(from: string, to: string, { subject, body }: SendMailPayload): string {
-  const safeSubject = sanitizeHeader(subject)
-  const safeFrom = sanitizeHeader(from)
-  const safeTo = sanitizeHeader(to)
-
-  return [
-    `From: ${safeFrom}`,
-    `To: ${safeTo}`,
-    `Subject: ${safeSubject}`,
-    'MIME-Version: 1.0',
-    'Content-Type: text/plain; charset=utf-8',
-    'Content-Transfer-Encoding: 8bit',
-    '',
-    body,
-  ].join('\r\n')
 }
 
 function isAuthorized(request: Request, env: Env): boolean {
@@ -70,6 +50,18 @@ async function parsePayload(request: Request): Promise<SendMailPayload | null> {
   }
 }
 
+function buildMimeMessage(from: string, to: string, { subject, body }: SendMailPayload): string {
+  const msg = createMimeMessage()
+  msg.setSender(from)
+  msg.setRecipient(to)
+  msg.setSubject(subject)
+  msg.addMessage({
+    contentType: 'text/plain',
+    data: body,
+  })
+  return msg.asRaw()
+}
+
 async function handleSendmail(request: Request, env: Env): Promise<Response> {
   if (request.method !== 'POST') {
     return jsonResponse(405, { error: 'Method Not Allowed' })
@@ -84,7 +76,7 @@ async function handleSendmail(request: Request, env: Env): Promise<Response> {
     return jsonResponse(400, { error: 'Invalid subject or body' })
   }
 
-  const raw = buildRawEmail(env.FROM_ADDRESS, env.TO_ADDRESS, payload)
+  const raw = buildMimeMessage(env.FROM_ADDRESS, env.TO_ADDRESS, payload)
   const message = new EmailMessage(env.FROM_ADDRESS, env.TO_ADDRESS, raw)
 
   try {
